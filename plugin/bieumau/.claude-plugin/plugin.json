@@ -1,0 +1,9 @@
+{
+  "name": "bieumau",
+  "version": "0.1.0",
+  "description": "Cai dat du an Form Bieu Mau Goc tren may moi, tao ho so bieu mau hien truong QUATEST 3 (BM3030.01 + BM3030.02), quy trinh ERP nhan ho so.",
+  "author": {
+    "name": "QUATEST 3 - NV2 Moi truong"
+  },
+  "repository": "https://github.com/phatnguyen1999p/Form-Bieu-Mau-Goc"
+}

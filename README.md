@@ -184,5 +184,28 @@ c:\Users\phat.nt\Desktop\Source\Form Bieu Mau Goc\
 
 ---
 
+## 🤖 CÀI ĐẶT TRÊN CLAUDE MỚI (PLUGIN `bieumau`)
+
+Trên máy mới chỉ cần có Claude Code (app desktop hoặc CLI). Trong ô chat của Claude gõ lần lượt:
+
+```
+/plugin marketplace add phatnguyen1999p/Form-Bieu-Mau-Goc
+/plugin install bieumau@bieumau-marketplace
+```
+
+Khởi động lại phiên rồi nói **"cài đặt biểu mẫu cho máy này"** — skill `cai-dat` sẽ tải mã nguồn về `Desktop\Source\Form Bieu Mau Goc`, cài Python + thư viện (`requirements.txt`), kiểm tra Word, ổ Z và chạy thử.
+
+Các skill trong plugin:
+
+| Skill | Dùng khi |
+| :--- | :--- |
+| `cai-dat` | Máy mới, kiểm tra môi trường |
+| `tao-ho-so` | Có scan phiếu yêu cầu trong `Input/`, cần tạo bộ BM3030.01 + BM3030.02 |
+| `erp-nhan-ho-so` | Nhận hồ sơ, phân công, tạo YCTN trên ERP |
+
+Cập nhật plugin khi repo có bản mới: `/plugin marketplace update bieumau-marketplace`.
+
+---
+
 ## 📝 NHẬT KÝ THAY ĐỔI
 - **27/10/2026 (Claude Cowork):** Hỗ trợ mã hồ sơ để trắng (`--blank_doc`), sửa lỗi chuẩn hóa `Đường`/`Đ.`, sửa thiết bị & quy trình cho profile `khi_nen_phong_sach`, sửa bố cục trang BM01 Hybrid. Chi tiết xem mục *NHẬT KÝ THAY ĐỔI CODE* cuối `GEMINI.md`.

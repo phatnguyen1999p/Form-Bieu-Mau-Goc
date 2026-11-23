@@ -1,0 +1,8 @@
+python-docx
+PyMuPDF
+pywin32
+openpyxl
+pandas
+xlsxwriter
+Pillow
+customtkinter
