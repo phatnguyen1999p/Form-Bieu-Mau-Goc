@@ -1,0 +1,7 @@
+﻿Input/
+output/
+scratch/
+__pycache__/
+*.pyc
+~$*
+.claude/settings.local.json
