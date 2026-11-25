@@ -50,6 +50,7 @@ DIRECT = OrderedDict([
     ("Độ ẩm", ("RH\n(%)", None)),
     ("Tốc độ gió", ("V gió\n(m/s)", None)),
     ("Bức xạ nhiệt", ("Bức xạ\nnhiệt\n(W/m²)", None)),
+    ("Điện từ trường", ("E (kV/m)\n/ H (A/m)", 2.2)),
     ("Ánh sáng", ("Ánh sáng\n(Lux)", None)),
     ("Ồn chung", ("Ồn\n(tên file đo)", 2.4)),
     ("Bụi hô hấp", ("Bụi HH\n(mg/m³)", None)),
@@ -63,6 +64,7 @@ ALIASES = [
     (r"^đ[oộ]\s*[aẩ]m", "Độ ẩm"),
     (r"(t[oố]c\s*đ[oộ]|v[aậ]n\s*t[oố]c)\s*gi[oó]", "Tốc độ gió"),
     (r"b[uứ]c\s*x[aạ]\s*nhi[eệ]t", "Bức xạ nhiệt"),
+    (r"đi[eệ]n\s*t[uừ]\s*tr[uư][oờ]ng|electromagnetic|\bemf\b", "Điện từ trường"),
     (r"^(ánh\s*sáng|độ\s*sáng|độ\s*rọi|cường\s*độ\s*(chiếu\s*)?sáng)", "Ánh sáng"),
     (r"d[aả]i\s*t[aầ]n", "Ồn dải tần"),
     (r"^(ồn|tiếng\s*ồn|độ\s*ồn)", "Ồn chung"),
@@ -99,15 +101,17 @@ def kind_of(ct):
 
 GROUP_OF_KIND = {"ecg": "Ecgonomy", "assess": "Ecgonomy", "micro": "Vi sinh", "sample": "Hơi khí độc", "octave": "Vật lý"}
 GROUP_OF_DIRECT = {"Nhiệt độ": "Vi khí hậu", "Độ ẩm": "Vi khí hậu", "Tốc độ gió": "Vi khí hậu", "Bức xạ nhiệt": "Vi khí hậu",
-                   "Ánh sáng": "Vật lý", "Ồn chung": "Vật lý", "Bụi hô hấp": "Bụi", "Bụi toàn phần": "Bụi",
+                   "Ánh sáng": "Vật lý", "Ồn chung": "Vật lý", "Điện từ trường": "Vật lý", "Bụi hô hấp": "Bụi", "Bụi toàn phần": "Bụi",
                    "CO₂": "Hơi khí độc"}
 GROUP_ORDER = ["Vi khí hậu", "Vật lý", "Bụi", "Hơi khí độc", "Vi sinh", "Ecgonomy"]
 
 # Máy đo để tick ☐ tại hiện trường (mỗi phòng): nhãn -> (chỉ tiêu áp dụng, các máy)
 DEVICES = OrderedDict([
-    ("Nhiệt độ, độ ẩm", (("Nhiệt độ", "Độ ẩm"), ["Testo 625", "Testo 440", "Climomaster 6533-2G"])),
+    # [24/11/2026] Nhiệt độ, độ ẩm đo bằng skSATO SK-170GT (thay Testo 625)
+    ("Nhiệt độ, độ ẩm", (("Nhiệt độ", "Độ ẩm"), ["skSATO SK-170GT", "Testo 440", "Climomaster 6533-2G"])),
     ("Tốc độ gió", (("Tốc độ gió",), ["Climomaster 6533-2G", "Climomaster 6501"])),
     ("Bức xạ nhiệt", (("Bức xạ nhiệt",), ["skSATO SK-170GT"])),
+    ("Điện từ trường", (("Điện từ trường",), ["EMF450"])),
     ("Ánh sáng", (("Ánh sáng",), ["Testo 440 – máy 1", "Testo 440 – máy 2"])),
     ("Ồn", (("Ồn chung", "Ồn dải tần"), ["Rion NL-53"])),
     ("Bụi", (("Bụi hô hấp", "Bụi toàn phần"), ["Temptop PMD 371"])),
@@ -120,9 +124,10 @@ DOTS_KHAC = "Khác: ……………"
 
 # Thiết bị (mục Thiết bị sử dụng) + quy trình N2.TC theo nhóm chỉ tiêu có trong hồ sơ
 EQUIP_RULES = [
-    (("Nhiệt độ", "Độ ẩm"), ["Máy đo nhiệt độ, độ ẩm Testo 625, Germany"]),
+    # [24/11/2026] skSATO SK-170GT đo cả nhiệt độ, độ ẩm và bức xạ nhiệt -> 1 dòng; EMF450 cho điện từ trường
+    (("Nhiệt độ", "Độ ẩm", "Bức xạ nhiệt"), ["Thiết bị đo nhiệt độ, độ ẩm, bức xạ nhiệt skSATO SK-170GT, Japan"]),
     (("Tốc độ gió",), ["Máy đo tốc độ gió Kanomax Climomaster 6533-2G, Japan"]),
-    (("Bức xạ nhiệt",), ["Máy đo bức xạ nhiệt skSATO SK-170GT, Japan"]),
+    (("Điện từ trường",), ["Máy đo điện từ trường EMF450"]),
     (("Ánh sáng",), ["Máy đo độ sáng Testo 440 Kit Lux, Testo – Germany"]),
     (("Ồn chung", "Ồn dải tần"), ["Thiết bị đo mức âm thanh Rion NL-53, Japan"]),
     (("Bụi hô hấp", "Bụi toàn phần"), ["Máy đo nồng độ bụi Temptop PMD 371, USA"]),
@@ -135,6 +140,7 @@ EQUIP_RULES = [
 PROC_RULES = [
     (("Nhiệt độ", "Độ ẩm", "Tốc độ gió", "Bức xạ nhiệt", "Ánh sáng"), "N2.TC.01"),
     (("Ồn chung", "Ồn dải tần"), "N2.TC.02"),
+    (("Điện từ trường",), "N2.TC.05"),
     (("Bụi hô hấp", "Bụi toàn phần"), "N2.TC.06"),
     (("CO₂", "@sample"), "N2.TC.07"),
     (("@micro",), "N2.TC.09"),
@@ -479,7 +485,7 @@ def build_bm01(data, info):
 
     # ---- bảng theo dõi khối lượng
     sum_cols = OrderedDict([("Nhiệt độ", ("Nhiệt độ",)), ("Độ ẩm", ("Độ ẩm",)), ("Gió", ("Tốc độ gió",)),
-                            ("BX nhiệt", ("Bức xạ nhiệt",)), ("Ánh sáng", ("Ánh sáng",)), ("Ồn", ("Ồn chung", "Ồn dải tần")),
+                            ("BX nhiệt", ("Bức xạ nhiệt",)), ("Điện từ", ("Điện từ trường",)), ("Ánh sáng", ("Ánh sáng",)), ("Ồn", ("Ồn chung", "Ồn dải tần")),
                             ("Bụi", ("Bụi hô hấp", "Bụi toàn phần")), ("CO₂", ("CO₂",)),
                             ("HKĐ", ("@sample",)), ("Vi sinh", ("@micro",)), ("Ecg", ("@ecg",)), ("TXNN", ("@assess",))])
     keys = _present_keys(data)
