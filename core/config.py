@@ -135,10 +135,11 @@ SOP_DATABASE = {
         "name": "Đo vi khí hậu và độ sáng",
         "standards": ["QCVN 26:2016/BYT", "QCVN 22:2016/BYT", "TCVN 5508:2009", "TCVN 5176:1990"],
         "equipment": {
-            "temp_hum": "Máy đo nhiệt độ, độ ẩm Testo 625, Germany;",
+            # [24/11/2026] skSATO SK-170GT đo nhiệt độ, độ ẩm và bức xạ nhiệt (thay Testo 625)
+            "temp_hum": "Thiết bị đo nhiệt độ, độ ẩm, bức xạ nhiệt skSATO SK-170GT, Japan;",
             "air_speed": "Máy đo tốc độ gió Kanomax Climomaster 6533-2G, Japan;",
             "lux": "Máy đo độ sáng Testo 440 Kit Lux, Testo – Germany;",
-            "thermal_rad": "Máy đo bức xạ nhiệt cầm tay skSATO SK-170GT, Japan."
+            "thermal_rad": "Thiết bị đo nhiệt độ, độ ẩm, bức xạ nhiệt skSATO SK-170GT, Japan."
         }
     },
     "N2.TC.02": {
@@ -170,7 +171,7 @@ SOP_DATABASE = {
         "name": "Đo điện từ trường",
         "standards": ["QCVN 25:2016/BYT"],
         "equipment": {
-            "emf": "Thiết bị đo điện từ trường tần số công nghiệp HI-3604, Holaday Industries – USA."
+            "emf": "Máy đo điện từ trường EMF450."  # [24/11/2026] thay Holaday HI-3604
         }
     },
     "N2.TC.06": {
@@ -179,7 +180,7 @@ SOP_DATABASE = {
         "standards": ["QCVN 02:2019/BYT", "TCVN 5067:1995"],
         "equipment": {
             "dust_sampler": "Bơm lấy mẫu bụi cá nhân SKC / Buck Genie và cassette màng lọc;",
-            "dust_direct": "Máy đo bụi trực tiếp Aerocet 831, USA."
+            "dust_direct": "Máy đo nồng độ bụi Temptop PMD 371, USA."  # [24/11/2026] thay Aerocet 831
         }
     },
     "N2.TC.07": {
@@ -279,7 +280,7 @@ CATEGORIES = {
         "default_request": "Quan trắc chất lượng không khí môi trường lao động: TVOC và CO2",
         "standard_equipment": (
             "- Thiết bị đo nồng độ CO2 trong không khí testo 440, CO2 probe, Germany;\n"
-            "- Thiết bị đo nồng độ TVOC trong không khí Drager Xam 8000, Gemany."
+            "- Thiết bị đo nồng độ TVOC trong không khí Drager Xam 8000, Germany."
         ),
         "standard_procedure": "QUATEST 3 3030:2025; N2.TC.07",
         "template_bm02_source": os.path.join(BASE_DIR, "CO2 - MTLD", "BM3030.02- BBLM - Q326D091792.docx"),
@@ -386,11 +387,11 @@ CATEGORIES = {
         "folder_name": "CO2 - MTLD",
         "default_request": "Quan trắc vi khí hậu, tiếng ồn, ánh sáng, bụi và các yếu tố môi trường lao động",
         "standard_equipment": (
-            "- Máy đo nhiệt độ, độ ẩm Testo 625, Germany;\n"
+            "- Thiết bị đo nhiệt độ, độ ẩm, bức xạ nhiệt skSATO SK-170GT, Japan;\n"
             "- Máy đo tốc độ gió Kanomax Climomaster 6533-2G, Japan;\n"
             "- Máy đo độ sáng Testo 440 Kit Lux, Testo – Germany;\n"
             "- Thiết bị đo mức âm thanh Rion NL-53, Japan;\n"
-            "- Bơm lấy mẫu bụi cá nhân SKC / Buck Genie và cassette màng lọc."
+            "- Máy đo nồng độ bụi Temptop PMD 371, USA."
         ),
         "standard_procedure": "QUATEST 3 3030:2025; N2.TC.01, N2.TC.02, N2.TC.06",
         "template_bm02_source": os.path.join(BASE_DIR, "CO2 - MTLD", "BM3030.02- BBLM - Q326D091792.docx"),
@@ -617,19 +618,24 @@ def resolve_equipment_and_procedure(category_key, indicators=None, request_conte
         if any(k in combined_info for k in ["co2", "cacbon dioxit"]):
             eq_list.append("- Thiết bị đo nồng độ CO2 trong không khí testo 440, CO2 probe, Germany;")
         if any(k in combined_info for k in ["tvoc", "voc", "hữu cơ bay hơi"]):
-            eq_list.append("- Thiết bị đo nồng độ TVOC trong không khí Drager Xam 8000, Gemany;")
-        if any(k in combined_info for k in ["nhiệt độ", "độ ẩm", "vi khí hậu"]):
-            eq_list.append("- Máy đo nhiệt độ, độ ẩm Testo 625, Germany;")
+            eq_list.append("- Thiết bị đo nồng độ TVOC trong không khí Drager Xam 8000, Germany;")
+        # [24/11/2026] Thiết bị MTLĐ mới: skSATO SK-170GT (nhiệt ẩm, bức xạ nhiệt), EMF450, Temptop PMD 371
+        if any(k in combined_info for k in ["nhiệt độ", "độ ẩm", "vi khí hậu", "bức xạ nhiệt"]):
+            eq_list.append("- Thiết bị đo nhiệt độ, độ ẩm, bức xạ nhiệt skSATO SK-170GT, Japan;")
             if "N2.TC.01" not in sop_codes: sop_codes.append("N2.TC.01")
-        if any(k in combined_info for k in ["ồn", "tiếng ồn"]):
+        # [FIX 24/11/2026] "ồn" phải là từ riêng (trước đây khớp nhầm "nồng độ" -> thêm máy đo ồn thừa)
+        if re.search(r"\bồn\b", combined_info):
             eq_list.append("- Thiết bị đo mức âm thanh Rion NL-53, Japan;")
             if "N2.TC.02" not in sop_codes: sop_codes.append("N2.TC.02")
+        if any(k in combined_info for k in ["điện từ trường", "điện từ"]):
+            eq_list.append("- Máy đo điện từ trường EMF450;")
+            if "N2.TC.05" not in sop_codes: sop_codes.append("N2.TC.05")
         if any(k in combined_info for k in ["bụi"]):
-            eq_list.append("- Bơm lấy mẫu bụi cá nhân SKC / Buck Genie và cassette màng lọc;")
+            eq_list.append("- Máy đo nồng độ bụi Temptop PMD 371, USA;")
             if "N2.TC.06" not in sop_codes: sop_codes.append("N2.TC.06")
         if not eq_list:
             eq_list.append("- Thiết bị đo nồng độ CO2 trong không khí testo 440, CO2 probe, Germany;")
-            eq_list.append("- Thiết bị đo nồng độ TVOC trong không khí Drager Xam 8000, Gemany;")
+            eq_list.append("- Thiết bị đo nồng độ TVOC trong không khí Drager Xam 8000, Germany;")
 
     elif category_key == "khi_nen_phong_sach":
         # [FIX 27/10/2026] Hồ sơ Hybrid Khí nén + Phòng sạch: tách chỉ tiêu theo chủ thể

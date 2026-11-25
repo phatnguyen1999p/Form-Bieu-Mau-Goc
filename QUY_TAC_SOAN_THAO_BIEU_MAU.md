@@ -77,11 +77,13 @@ Tài liệu này tổng hợp toàn bộ các quy tắc chuẩn mực bắt bu�
      - Quy trình áp dụng: `QUATEST 3 3030:2025; N2.TC.MP.01`.
 
    3.5. **Vi khí hậu & Môi trường lao động (N2.TC.01 đến N2.TC.08)**:
-     - Vi khí hậu (nhiệt, ẩm, gió) -> `Máy đo nhiệt độ, độ ẩm Testo 625, Germany;`, `Máy đo tốc độ gió Kanomax Climomaster 6533-2G, Japan;`
+     - **[CẬP NHẬT 24/11/2026]** Nhiệt độ, độ ẩm, bức xạ nhiệt -> `Thiết bị đo nhiệt độ, độ ẩm, bức xạ nhiệt skSATO SK-170GT, Japan;` (thay Testo 625); tốc độ gió -> `Máy đo tốc độ gió Kanomax Climomaster 6533-2G, Japan;`
      - Đo độ rọi -> `Máy đo độ sáng Testo 440 Kit Lux, Testo – Germany;`
      - Đo độ ồn -> `Thiết bị đo mức âm thanh Rion NL-53, Japan;`
-     - Đo bụi MTLĐ -> `Bơm lấy mẫu bụi cá nhân SKC / Buck Genie và cassette màng lọc;`
-     - Đo khí CO2 / TVOC -> `Thiết bị đo nồng độ CO2 trong không khí testo 440, Germany;`, `Thiết bị đo nồng độ TVOC Drager Xam 8000, Germany;`
+     - Đo điện từ trường -> `Máy đo điện từ trường EMF450;` (thay Holaday HI-3604)
+     - Đo bụi MTLĐ trực tiếp -> `Máy đo nồng độ bụi Temptop PMD 371, USA;` (thay Metone Aerocet 831 / bơm SKC)
+     - Bơm lấy mẫu hơi khí -> `Bơm lấy mẫu khí Kitagawa ASP 1200, Japan;`
+     - Đo khí CO2 -> `Thiết bị đo nồng độ CO2 trong không khí testo 440, Germany;`. Không dùng Drager X-am 8000 cho MTLĐ (chỉ giữ cho TVOC của profile `co2_mtld`).
      - Test nhanh hơi khí độc -> `Bơm hút khí Gastec / Kitagawa và ống phát hiện nhanh chuyên dụng.`
 
    *Tuyệt đối không đưa các thiết bị của chỉ tiêu không được yêu cầu.*
@@ -318,7 +320,7 @@ Tài liệu này tổng hợp toàn bộ các quy tắc chuẩn mực bắt bu�
 - **Công cụ:** `generate_mtld.py` (module `core/mtld_builder.py`). Áp dụng cho mọi hồ sơ quan trắc MTLĐ có nhiều phòng/khu vực (khởi nguồn từ hồ sơ QUATEST 3 – KTN Cát Lái 2026). Hồ sơ chỉ đo CO2/TVOC văn phòng vẫn dùng profile `co2_mtld` cũ.
 - **Đầu vào:** file Excel kế hoạch theo mẫu `templates/MTLD_KeHoach_mau.xlsx`: cột `Phòng | Chỉ tiêu | SL | Điểm đo` (Điểm đo dạng `P304: 02; P303: 01`). Điểm đo ghi không rõ số -> cả cụm thành 1 khu vực; sửa bằng `--fix "Phòng|Chỉ tiêu=Khu vực:SL;Khu vực:SL || ..."`.
 - **BM3030.01 Ghi chép:** trang 1 thông tin + bảng theo dõi khối lượng theo phòng (cột Xong ☐) + bảng tra mã OWAS / QĐ 3733 (nếu có Ecgonomy). **Mỗi phòng 1 trang** gồm:
-  + Bảng `Máy đo sử dụng` tick ☐ (chỉ hiện chỉ tiêu phòng đó có): Nhiệt ẩm `Testo 625 / Testo 440 / Climomaster 6533-2G`; Gió `Climomaster 6533-2G / 6501`; Ánh sáng `Testo 440 – máy 1 / Testo 440 – máy 2`; Ồn `Rion NL-53`; Bụi `Metone Aerocet 831`; CO₂ `testo 440`; luôn có `☐ Khác: ……`.
+  + Bảng `Máy đo sử dụng` tick ☐ (chỉ hiện chỉ tiêu phòng đó có): Nhiệt ẩm `skSATO SK-170GT / Testo 440 / Climomaster 6533-2G`; Gió `Climomaster 6533-2G / 6501`; Bức xạ nhiệt `skSATO SK-170GT`; Điện từ trường `EMF450`; Ánh sáng `Testo 440 – máy 1 / Testo 440 – máy 2`; Ồn `Rion NL-53`; Bụi `Temptop PMD 371`; CO₂ `testo 440`; luôn có `☐ Khác: ……` (cập nhật 24/11/2026).
   + Bảng đo trực tiếp: mỗi khu vực ghi đủ tên ở từng dòng (KHÔNG dùng dấu 〃), **ô xám đậm (A6A6A6) = không đo chỉ tiêu đó tại điểm đó**. Cột Ồn ghi **tên file đo** (không ghi dBA); ồn dải tần chỉ 1 cột tên file đo.
   + Bảng lấy mẫu hơi khí độc / vi sinh: ghi sẵn tên chỉ tiêu; cột `Bơm` tick `☐ Buck ☐ SKC ☐ Kitagawa` (Buck Genie, SKC PCXR8, Kitagawa ASP 1200 – Japan); vi sinh `☐ Bio Culture`.
   + Bảng Ecgonomy (OWAS: Lưng/Tay/Chân/Vật nặng + vị trí lao động).
